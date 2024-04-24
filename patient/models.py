@@ -28,6 +28,26 @@ class BaseModel(models.Model):
         raise NotImplementedError('You did not override the string method!')
 
 
+class Report(BaseModel):
+    """An object for patients reports"""
+    title = models.CharField(
+        max_length=255,
+        blank=False,
+        verbose_name='تشخیص'
+    )
+    description = models.TextField(
+        blank=False,
+        verbose_name='توضیحات'
+    )
+
+    class Meta:
+        verbose_name = 'گزارش'
+        verbose_name_plural = 'گزارشات'
+
+    def __str__(self):
+        return f'{self.title}\n{self.description}'
+
+
 class Patient(BaseModel):
     """A class for patients"""
     first_name = models.CharField(
@@ -66,10 +86,34 @@ class Patient(BaseModel):
 
     def __str__(self):
         return (
-            f'{self.first_name}' +
-            f'{self.last_name}' +
-            f'{self.sex}' +
-            f'{self.birth_day}' +
-            f'{self.national_code}' +
+            f'{self.first_name} ' +
+            f'{self.last_name} - ' +
+            f'{self.sex} - ' +
+            f'{self.birth_day} - ' +
+            f'{self.national_code} - ' +
             f'{self.file_number}'
         )
+
+
+class PatientsReports(BaseModel):
+    """A class to dedicate reports to patients"""
+    patient = models.ForeignKey(
+        Patient,
+        on_delete=models.deletion.CASCADE,
+        verbose_name='مراجعه کننده',
+    )
+    report = models.ForeignKey(
+        Report,
+        on_delete=models.deletion.CASCADE,
+        verbose_name='گزارش',
+    )
+
+    class Meta:
+        verbose_name = 'گزارش مراجعه کننده'
+        verbose_name_plural = 'گزارشات مراجعه کننده'
+
+    def __str__(self):
+        return f'{self.patient}: \n{self.report}'
+
+
+# TODO: Create an object for patients medicines
