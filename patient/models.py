@@ -6,6 +6,7 @@ GENDER_CHOICES = (
     ('زن', 'زن'),
 )
 
+
 class BaseModel(models.Model):
     """A base class for other models"""
     is_active = models.BooleanField(
@@ -95,6 +96,22 @@ class Patient(BaseModel):
         )
 
 
+class Medicine(BaseModel):
+    """An object of patients medicines"""
+    medicine_name = models.CharField(
+        max_length=255,
+        blank=False,
+        verbose_name='نام دارو',
+    )
+
+    class Meta:
+        verbose_name = 'دارو'
+        verbose_name_plural = 'داروها'
+
+    def __str__(self):
+        return f'{self.medicine_name}'
+
+
 class PatientsReports(BaseModel):
     """A class to dedicate reports to patients"""
     patient = models.ForeignKey(
@@ -107,13 +124,19 @@ class PatientsReports(BaseModel):
         on_delete=models.deletion.CASCADE,
         verbose_name='گزارش',
     )
+    medicine = models.ForeignKey(
+        Medicine,
+        on_delete=models.deletion.CASCADE,
+        verbose_name='دارو',
+    )
+    medicine_count = models.IntegerField(verbose_name='تعداد مورد نیاز')
+    medicine_description = models.TextField(
+        verbose_name='طریقه مصرف',
+    )
 
     class Meta:
         verbose_name = 'گزارش مراجعه کننده'
         verbose_name_plural = 'گزارشات مراجعه کننده'
 
     def __str__(self):
-        return f'{self.patient}: \n{self.report}'
-
-
-# TODO: Create an object for patients medicines
+        return f'{self.patient}: \n{self.report} - {self.medicine} - {self.medicine_count}'

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Patient, Report, PatientsReports
+from .models import Patient, Report, PatientsReports, Medicine
 
 
 # My actions
@@ -46,13 +46,14 @@ class AdminPatient(BaseAdmin):
 @admin.register(Report)
 class AdminReport(BaseAdmin):
     list_display = (
+        'id',
         'title',
         'description',
         'is_active',
         'created_date',
         'updated_date',
     )
-    list_display_links = ('title',)
+    list_display_links = ('id', 'title')
     list_filter = ('is_active', 'created_date', 'updated_date')
     list_editable = ('is_active',)
     # Order by national code
@@ -64,17 +65,42 @@ class AdminReport(BaseAdmin):
 @admin.register(PatientsReports)
 class AdminPatientsReports(BaseAdmin):
     list_display = (
+        'id',
         'patient',
         'report',
+        'medicine',
+        'medicine_count',
+        'medicine_description',
         'is_active',
         'created_date',
         'updated_date',
     )
-    list_display_links = ('patient', 'report')
+    list_display_links = ('id', 'patient', 'report', 'medicine')
     list_filter = ('is_active', 'created_date', 'updated_date')
     list_editable = ('is_active',)
     # Order by national code
     ordering = ('pk',)
 
-    search_fields = ('patient__national_code', 'patient__first_name', 'patient__last_name')
+    search_fields = (
+        'patient__national_code',
+        'patient__first_name',
+        'patient__last_name',
+        'medicine__medicine_name',
+    )
 
+
+@admin.register(Medicine)
+class AdminMedicine(BaseAdmin):
+    list_display = (
+        'medicine_name',
+        'is_active',
+        'created_date',
+        'updated_date',
+    )
+    list_display_links = ('medicine_name',)
+    list_filter = ('is_active', 'created_date', 'updated_date')
+    list_editable = ('is_active',)
+    # Order by national code
+    ordering = ('pk',)
+
+    search_fields = ('medicine_name',)
