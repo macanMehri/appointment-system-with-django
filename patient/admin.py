@@ -83,6 +83,7 @@ class AdminPatientsReports(BaseAdmin):
 
     search_fields = (
         'patient__national_code',
+        'patient__file_number',
         'patient__first_name',
         'patient__last_name',
         'medicine__medicine_name',
