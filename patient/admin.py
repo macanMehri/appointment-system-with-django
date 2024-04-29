@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Patient, Report, PatientsReports, Medicine
+from .models import Patient, Report, PatientsReports, Medicine, Service, Reservation
 
 
 # My actions
@@ -21,6 +21,44 @@ class BaseAdmin(admin.ModelAdmin):
     )
 
 
+@admin.register(Service)
+class AdminService(BaseAdmin):
+    list_display = (
+        'id',
+        'title',
+        'cost',
+        'is_active',
+        'created_date',
+        'updated_date',
+    )
+    list_display_links = ('id', 'title',)
+    list_filter = ('is_active', 'created_date', 'updated_date')
+    list_editable = ('is_active', 'cost')
+    # Order by national code
+    ordering = ('pk',)
+
+    search_fields = ('id', 'title')
+
+
+@admin.register(Reservation)
+class AdminReservation(BaseAdmin):
+    list_display = (
+        'id',
+        'date',
+        'service',
+        'is_active',
+        'created_date',
+        'updated_date',
+    )
+    list_display_links = ('id',)
+    list_filter = ('is_active', 'created_date', 'updated_date', 'date')
+    list_editable = ('is_active',)
+    # Order by national code
+    ordering = ('pk',)
+
+    search_fields = ('id', 'service__title', 'service__cost')
+
+
 @admin.register(Patient)
 class AdminPatient(BaseAdmin):
     list_display = (
@@ -30,17 +68,18 @@ class AdminPatient(BaseAdmin):
         'birth_day',
         'sex',
         'file_number',
+        'reservation',
         'is_active',
         'created_date',
         'updated_date',
     )
     list_display_links = ('national_code', 'first_name', 'file_number',)
-    list_filter = ('is_active', 'created_date', 'updated_date', 'sex', 'birth_day')
+    list_filter = ('is_active', 'reservation__date', 'created_date', 'updated_date', 'sex', 'birth_day')
     list_editable = ('is_active', 'sex')
     # Order by national code
     ordering = ('national_code',)
 
-    search_fields = ('national_code', 'first_name', 'last_name', 'file_number')
+    search_fields = ('national_code', 'first_name', 'last_name', 'file_number', 'reservation__service__title')
 
 
 @admin.register(Report)
@@ -93,6 +132,7 @@ class AdminPatientsReports(BaseAdmin):
 @admin.register(Medicine)
 class AdminMedicine(BaseAdmin):
     list_display = (
+        'id',
         'medicine_name',
         'is_active',
         'created_date',
