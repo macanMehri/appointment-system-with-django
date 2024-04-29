@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 
 
@@ -27,6 +29,44 @@ class BaseModel(models.Model):
 
     def __str__(self) -> str:
         raise NotImplementedError('You did not override the string method!')
+
+
+class Service(BaseModel):
+    """A class for services"""
+    title = models.CharField(
+        max_length=255,
+        blank=False,
+        verbose_name='موضوع'
+    )
+    cost = models.FloatField(
+        verbose_name='هزینه'
+    )
+
+    class Meta:
+        verbose_name = 'سرویس'
+        verbose_name_plural = 'سرویس ها'
+
+    def __str__(self) -> str:
+        return f'{self.title}: {self.cost}'
+
+
+class Reservation(BaseModel):
+    """A class for reserves"""
+    date = models.DateTimeField(
+        verbose_name='تاریخ'
+    )
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.deletion.CASCADE,
+        verbose_name='سرویس',
+    )
+
+    class Meta:
+        verbose_name = 'نوبت'
+        verbose_name_plural = 'نویت ها'
+
+    def __str__(self) -> str:
+        return f'{self.date}:\n{self.service}'
 
 
 class Report(BaseModel):
@@ -76,10 +116,20 @@ class Patient(BaseModel):
         verbose_name='کد ملی',
     )
     file_number = models.CharField(
+        unique=True,
         max_length=100,
         verbose_name='شماره پرونده',
     )
     # TODO: Create a field or property to calculate age
+
+    reservation = models.ForeignKey(
+        Reservation,
+        null=True,
+        on_delete=models.deletion.CASCADE,
+        verbose_name='نوبت'
+    )
+
+    # TODO: Create a property for calculating current paid
 
     class Meta:
         verbose_name = 'مراجعه کننده'
