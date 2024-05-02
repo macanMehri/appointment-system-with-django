@@ -63,7 +63,7 @@ class Reservation(BaseModel):
 
     class Meta:
         verbose_name = 'نوبت'
-        verbose_name_plural = 'نویت ها'
+        verbose_name_plural = 'نوبت ها'
 
     def __str__(self) -> str:
         return f'{self.date}:\n{self.service}'
