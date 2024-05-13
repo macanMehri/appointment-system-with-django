@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Patient, Report, PatientsReports, Medicine, Service, Reservation
+from .models import Patient, Report, PatientsReports, Medicine, Service, Reservation, Account
 
 
 # My actions
@@ -14,11 +14,33 @@ def deactivate_selected_items(modeladmin, request, queryset):
 
 
 class BaseAdmin(admin.ModelAdmin):
+
     # Actions
     actions = (
         activate_selected_items,
         deactivate_selected_items,
     )
+
+
+@admin.register(Account)
+class AdminAccount(BaseAdmin):
+    list_display = (
+        'id',
+        'first_name',
+        'last_name',
+        'phone_number',
+        'password',
+        'is_active',
+        'created_date',
+        'updated_date',
+    )
+    list_display_links = ('id', 'first_name', 'last_name')
+    list_filter = ('is_active', 'created_date', 'updated_date')
+    list_editable = ('is_active',)
+    # Order by national code
+    ordering = ('pk',)
+
+    search_fields = ('id', 'first_name', 'last_name', 'phone_number')
 
 
 @admin.register(Service)
@@ -65,7 +87,9 @@ class AdminPatient(BaseAdmin):
         'national_code',
         'first_name',
         'last_name',
+        'phone_number',
         'birth_day',
+        'سن',
         'sex',
         'file_number',
         'reservation',
@@ -79,7 +103,14 @@ class AdminPatient(BaseAdmin):
     # Order by national code
     ordering = ('national_code',)
 
-    search_fields = ('national_code', 'first_name', 'last_name', 'file_number', 'reservation__service__title')
+    search_fields = (
+        'national_code',
+        'first_name',
+        'last_name',
+        'file_number',
+        'reservation__service__title',
+        'phone_number',
+    )
 
 
 @admin.register(Report)

@@ -1,5 +1,5 @@
-import datetime
-
+from datetime import datetime
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 
@@ -31,6 +31,41 @@ class BaseModel(models.Model):
         raise NotImplementedError('You did not override the string method!')
 
 
+class Account(BaseModel):
+    """A class to store accounts"""
+    first_name = models.CharField(
+        max_length=255,
+        blank=False,
+        verbose_name='نام'
+    )
+    last_name = models.CharField(
+        max_length=255,
+        blank=False,
+        verbose_name='نام خانوادگی'
+    )
+    phone_number = models.CharField(
+        max_length=11,
+        blank=False,
+        verbose_name='شماره تماس'
+    )
+    password = models.CharField(
+        max_length=20,
+        blank=False,
+        verbose_name='رمز عبور'
+    )
+    
+    @property
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'
+
+    class Meta:
+        verbose_name = 'حساب کاربری'
+        verbose_name_plural = 'حساب های کاربری'
+
+    def __str__(self) -> str:
+        return f'{self.full_name}: {self.phone_number}'
+
+
 class Service(BaseModel):
     """A class for services"""
     title = models.CharField(
@@ -39,6 +74,7 @@ class Service(BaseModel):
         verbose_name='موضوع'
     )
     cost = models.FloatField(
+        validators=[MinValueValidator(1)],
         verbose_name='هزینه'
     )
 
@@ -101,6 +137,11 @@ class Patient(BaseModel):
         blank=False,
         verbose_name='نام خانوادگی'
     )
+    phone_number = models.CharField(
+        max_length=11,
+        blank=False,
+        verbose_name='شماره تماس'
+    )
     sex = models.CharField(
         max_length=9,
         choices=GENDER_CHOICES,
@@ -115,12 +156,14 @@ class Patient(BaseModel):
         primary_key=True,
         verbose_name='کد ملی',
     )
-    file_number = models.CharField(
+    file_number = models.IntegerField(
         unique=True,
-        max_length=100,
         verbose_name='شماره پرونده',
     )
-    # TODO: Create a field or property to calculate age
+
+    @property
+    def سن(self):
+        return datetime.now().year - self.birth_day.year
 
     reservation = models.ForeignKey(
         Reservation,
@@ -128,8 +171,6 @@ class Patient(BaseModel):
         on_delete=models.deletion.CASCADE,
         verbose_name='نوبت'
     )
-
-    # TODO: Create a property for calculating current paid
 
     class Meta:
         verbose_name = 'مراجعه کننده'
