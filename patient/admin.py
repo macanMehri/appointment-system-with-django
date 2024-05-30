@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Patient, Report, PatientsReports, Medicine, Service, Reservation, Account
+from .models import (
+    Patient, Report, PatientsReports, Medicine, Service, Reservation, Account, AvailableTimes, UsersSuggestion
+)
 
 
 # My actions
@@ -60,6 +62,24 @@ class AdminService(BaseAdmin):
     ordering = ('pk',)
 
     search_fields = ('id', 'title')
+
+
+@admin.register(AvailableTimes)
+class AdminAvailableTimes(BaseAdmin):
+    list_display = (
+        'id',
+        'available_time',
+        'is_active',
+        'created_date',
+        'updated_date',
+    )
+    list_display_links = ('id', 'available_time')
+    list_filter = ('available_time', 'is_active', 'created_date', 'updated_date')
+    list_editable = ('is_active',)
+    # Order by national code
+    ordering = ('pk',)
+
+    search_fields = ('id', 'available_time')
 
 
 @admin.register(Reservation)
@@ -176,3 +196,23 @@ class AdminMedicine(BaseAdmin):
     ordering = ('pk',)
 
     search_fields = ('medicine_name',)
+
+
+@admin.register(UsersSuggestion)
+class AdminUsersSuggestion(BaseAdmin):
+    list_display = (
+        'id',
+        'title',
+        'type',
+        'description',
+        'is_active',
+        'created_date',
+        'updated_date',
+    )
+    list_display_links = ('id', 'title',)
+    list_filter = ('title', 'type', 'is_active', 'created_date', 'updated_date')
+    list_editable = ('is_active',)
+    # Order by national code
+    ordering = ('pk',)
+
+    search_fields = ('title', 'type')
