@@ -7,6 +7,10 @@ GENDER_CHOICES = (
     ('مرد', 'مرد'),
     ('زن', 'زن'),
 )
+REPORT_CHOICES = (
+    ('پیشنهاد', 'پیشنهاد'),
+    ('انتقاد', 'انتقاد')
+)
 
 
 class BaseModel(models.Model):
@@ -29,6 +33,32 @@ class BaseModel(models.Model):
 
     def __str__(self) -> str:
         raise NotImplementedError('You did not override the string method!')
+
+
+class UsersSuggestion(BaseModel):
+    """A class for users suggestions and criticism"""
+    title = models.CharField(
+        max_length=255,
+        blank=False,
+        verbose_name='موضوع'
+    )
+    type = models.CharField(
+        max_length=9,
+        choices=REPORT_CHOICES,
+        default='پیشنهاد',
+        verbose_name='نوع'
+    )
+    description = models.TextField(
+        blank=False,
+        verbose_name='توضیحات'
+    )
+
+    class Meta:
+        verbose_name = 'پیشنهاد و انتقاد'
+        verbose_name_plural = 'پیشنهادات و انتقادات'
+
+    def __str__(self) -> str:
+        return f'{self.title}-{self.type}: {self.description}'
 
 
 class Account(BaseModel):
@@ -64,6 +94,20 @@ class Account(BaseModel):
 
     def __str__(self) -> str:
         return f'{self.full_name}: {self.phone_number}'
+
+
+class AvailableTimes(BaseModel):
+    """A class to show open times for reservation"""
+    available_time = models.DateTimeField(
+        verbose_name='تاریخ'
+    )
+
+    class Meta:
+        verbose_name = 'نوبت آزاد'
+        verbose_name_plural = 'نوبت های آزاد'
+
+    def __str__(self) -> str:
+        return f'{self.available_time}'
 
 
 class Service(BaseModel):
