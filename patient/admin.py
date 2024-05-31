@@ -177,6 +177,7 @@ class AdminPatientsReports(BaseAdmin):
         'patient__first_name',
         'patient__last_name',
         'medicine__medicine_name',
+        'report__title',
     )
 
 
