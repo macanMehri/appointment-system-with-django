@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'landingpage.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Landing page</title>
+</head>
+<body>
+ <wrapper>
+    
+    <div class="header-container">
+        <div class="container">
+            <nav class="nav">
+                <div class="nav-logo">
+                    <p>BAMAN</p>
+                </div>
+                <div class="nav-menu" id="navMenu">
+                    <ul>
+                        <li><a href="#" class="link active">صفحه اصلی</a></li>
+                        <li><a href="#myfooter" onclick="javascript:scrollDown();" class="link">ارتباط با ما</a></li>
+                        <li><a href="#myfooter" onclick="javascript:scrollDown();" class="link">درباره ما</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="nav-button">
+                    <a href="signuppage.html">
+                        <button>ثبت نام / ورود </button>
+                      </a>
+                </div>
+                <!-- <div class="nav-menu-btn">
+                    <i class="bx bx-menu" onclick="myMenuFunction()"></i>
+                </div> -->
+            </nav>
+            <div class="web-description-container">
+                
+                <div class="web-description">
+                    <h2 class="web-description-title">کلینیک پوست, مو, زیبایی و لیزر </h2>
+                   
+
+                </div>
+                <!-- <img width="1000px" height="260px" src="medicine-blue-background-flat-lay.jpg" alt="laptop-image"> -->
+            </div>
+        </div>
+    </div>
+    <div class="web-info-container">
+        <div class="container">
+            <h2 class="web-info-title">   خدمات ارائه شده در کلینیک</h2>
+            <div class="info-container">
+                <div class="info-item">
+                    <img class="info-item-image" width="200px" height="200px" src="joosh.jpg" alt="first-image">
+                    <p>خدمات پوست</p>
+                </div>
+                <div class="info-item">
+                    <img class="info-item-image" width="200px" height="200px" src="hair.jpg" alt="second-image">
+                    <p>خدمات مو</p>
+                </div>
+                <div class="info-item">
+                    <img class="info-item-image" width="200px" height="200px" src="zibayi.jpg" alt="third-image">
+                    <p>خدمات زیبایی</p>
+                </div>
+                <div class="info-item">
+                    <img class="info-item-image" width="200px" height="200px" src="laer.jpg" alt="fourth-image">
+                    <p>خدمات لیزر</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="quote-container">
+        <div class="container">
+            <div class="quote-text-container">
+                <p class="quote-text">مراکز پوست، مو، زیبایی و لیزر با مراجعان زیادی روبرو هستند که مدیریت نوبت دهی و
+                    ارائه خدمات به آنها به صورت کارآمد و منظم، چالشی بزرگ برای این مراکز محسوب می‌شود. از
+                    طرفی، جمع آوری و تحلیل داده‌های مربوط به مراجعان و خدمات ارائه شده، برای تصمیم‌گیری‌های
+                    مدیریتی و بهبود کیفیت خدمات، امری ضروری است.
+                    </p>
+                
+            </div>
+        </div>
+    </div>
+    <div class="product-signup-contaner">
+        <div class="container">
+            <div class="product-signup">
+                <div class="product-sell">
+                    <h2>برای استفاده ازین خدمات ثبت نام کنید و نوبت و سرویس مورد نظر خود را رزرو کنید </h2>
+                    
+                </div>
+                <a href="signuppage.html">
+                    <button>شروع کنید</button>
+                  </a>
+            </div>
+        </div>
+    </div>
+    <footer id="myfooter">
+        <p>گروه نرم افزاری بامن ,تجربه ای امن 
+            <br>------     09379146422 ------    </p>
+    </footer>
+    </wrapper>
+    <script>
+   
+        function myMenuFunction() {
+         var i = document.getElementById("navMenu");
+     
+         if(i.className === "nav-menu") {
+             i.className += " responsive";
+         } else {
+             i.className = "nav-menu";
+         }
+        }
+      
+     </script>
+     
+     <script>
+     
+         var a = document.getElementById("loginBtn");
+         var b = document.getElementById("registerBtn");
+         var x = document.getElementById("login");
+         var y = document.getElementById("register");
+     
+         function login() {
+             x.style.left = "4px";
+             y.style.right = "-520px";
+             a.className += " white-btn";
+             b.className = "btn";
+             x.style.opacity = 1;
+             y.style.opacity = 0;
+         }
+     
+         function register() {
+             x.style.left = "-510px";
+             y.style.right = "5px";
+             a.className = "btn";
+             b.className += " white-btn";
+             x.style.opacity = 0;
+             y.style.opacity = 1;
+         }
+         function scrollDown() {
+            $('html, body').animate({scrollTop: $("footer").offset().top}, 200);
+        }
+     </script>
+     
+</body>
+</html>

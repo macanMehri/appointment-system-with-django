@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from django.contrib.postgres.fields import ranges
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
@@ -33,6 +35,42 @@ class BaseModel(models.Model):
 
     def __str__(self) -> str:
         raise NotImplementedError('You did not override the string method!')
+
+
+class Doctor(BaseModel):
+    """A class for doctors working in the clinic"""
+    first_name = models.CharField(
+        max_length=255,
+        blank=False,
+        verbose_name='نام'
+    )
+    last_name = models.CharField(
+        max_length=255,
+        blank=False,
+        verbose_name='نام خانوادگی'
+    )
+    password = models.CharField(
+        max_length=20,
+        blank=False,
+        verbose_name='رمز عبور'
+    )
+    phone_number = models.CharField(
+        max_length=11,
+        blank=False,
+        verbose_name='شماره تماس'
+    )
+    national_code = models.CharField(
+        max_length=10,
+        primary_key=True,
+        verbose_name='کد ملی',
+    )
+
+    class Meta:
+        verbose_name = 'پزشک'
+        verbose_name_plural = 'پزشک ها'
+
+    def __str__(self) -> str:
+        return f'{self.first_name}-{self.last_name}'
 
 
 class UsersSuggestion(BaseModel):
@@ -130,15 +168,28 @@ class Service(BaseModel):
         return f'{self.title}: {self.cost}'
 
 
+class DoctorsServices(BaseModel):
+    """A class to dedicate services to doctors"""
+    doctor = models.ForeignKey(Doctor, on_delete=models.deletion.CASCADE, verbose_name='پزشک')
+    service = models.ForeignKey(Service, on_delete=models.deletion.CASCADE, verbose_name='خدمت')
+
+    class Meta:
+        verbose_name = 'خدمت پزشک'
+        verbose_name_plural = 'خدمات پزشک'
+
+    def __str__(self):
+        return f'{self.doctor} : {self.service}'
+
+
 class Reservation(BaseModel):
     """A class for reserves"""
     date = models.DateTimeField(
         verbose_name='تاریخ'
     )
-    service = models.ForeignKey(
-        Service,
+    doctor_and_service = models.ForeignKey(
+        DoctorsServices,
         on_delete=models.deletion.CASCADE,
-        verbose_name='سرویس',
+        verbose_name='خدمات و پزشک',
     )
 
     class Meta:
@@ -146,7 +197,7 @@ class Reservation(BaseModel):
         verbose_name_plural = 'نوبت ها'
 
     def __str__(self) -> str:
-        return f'{self.date}:\n{self.service}'
+        return f'{self.date}:\n{self.doctor_and_service}'
 
 
 class Report(BaseModel):

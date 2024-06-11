@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import (
-    Patient, Report, PatientsReports, Medicine, Service, Reservation, Account, AvailableTimes, UsersSuggestion
+    Patient, Report, PatientsReports, Medicine, Service, Reservation, Account, AvailableTimes, UsersSuggestion,
+    Doctor, DoctorsServices,
 )
 
 
@@ -82,17 +83,37 @@ class AdminAvailableTimes(BaseAdmin):
     search_fields = ('id', 'available_time')
 
 
-@admin.register(Reservation)
-class AdminReservation(BaseAdmin):
+@admin.register(DoctorsServices)
+class AdminDoctorsServices(BaseAdmin):
     list_display = (
         'id',
-        'date',
+        'doctor',
         'service',
         'is_active',
         'created_date',
         'updated_date',
     )
-    list_display_links = ('id',)
+    list_display_links = ('id', 'doctor', 'service')
+    list_filter = ('is_active', 'created_date', 'updated_date', 'doctor', 'service')
+    list_editable = ('is_active',)
+    # Order by national code
+    ordering = ('pk',)
+
+    search_fields = ('id', 'service__title', 'doctor__first_name', 'doctor__last_name', 'doctor__national_code')
+
+
+
+@admin.register(Reservation)
+class AdminReservation(BaseAdmin):
+    list_display = (
+        'id',
+        'date',
+        'doctor_and_service',
+        'is_active',
+        'created_date',
+        'updated_date',
+    )
+    list_display_links = ('id', 'doctor_and_service')
     list_filter = ('is_active', 'created_date', 'updated_date', 'date')
     list_editable = ('is_active',)
     # Order by national code
@@ -217,3 +238,28 @@ class AdminUsersSuggestion(BaseAdmin):
     ordering = ('pk',)
 
     search_fields = ('title', 'type')
+
+
+@admin.register(Doctor)
+class AdminDoctor(BaseAdmin):
+    list_display = (
+        'national_code',
+        'first_name',
+        'last_name',
+        'phone_number',
+        'is_active',
+        'created_date',
+        'updated_date',
+    )
+    list_display_links = ('national_code', 'first_name', 'last_name')
+    list_filter = ('is_active', 'created_date', 'updated_date')
+    list_editable = ('is_active',)
+    # Order by national code
+    ordering = ('national_code',)
+
+    search_fields = (
+        'national_code',
+        'first_name',
+        'last_name',
+        'phone_number',
+    )
