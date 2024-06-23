@@ -1,7 +1,8 @@
 from django.urls import path, include
 from .views import (
     PatientViewSet, ReportViewSet, PatientsReportsViewSet, MedicineViewSet, ServiceViewSet, ReservationViewSet,
-    AccountViewSet, AvailableTimesViewSet, UsersSuggestionViewSet, DoctorViewSet, DoctorsServicesViewSet,
+    AccountViewSet, AvailableTimesViewSet, UsersSuggestionViewSet, DoctorViewSet, DoctorsServicesViewSet, SignUpView,
+    SignInView
 )
 from rest_framework import routers
 
@@ -26,8 +27,8 @@ service_report_router.register('', ServiceViewSet)
 reservation_report_router = routers.DefaultRouter()
 reservation_report_router.register('', ReservationViewSet)
 
-account_report_router = routers.DefaultRouter()
-account_report_router.register('', AccountViewSet)
+account_router = routers.DefaultRouter()
+account_router.register('', AccountViewSet)
 
 available_time_report_router = routers.DefaultRouter()
 available_time_report_router.register('', AvailableTimesViewSet)
@@ -46,8 +47,10 @@ urlpatterns = [
     path('medicine_report_api/', include(medicine_report_router.urls,)),
     path('service_report_api/', include(service_report_router.urls,)),
     path('reservation_report_api/', include(reservation_report_router.urls,)),
-    path('account_report_api/', include(account_report_router.urls,)),
+    path('account_api/', include(account_router.urls,)),
     path('available_time_report_api/', include(available_time_report_router.urls,)),
     path('user_suggestion_report_api/', include(user_suggestion_report_router.urls,)),
     path('doctor_services_report_api/', include(doctor_services_report_router.urls,)),
+    path('api/signup/', SignUpView.as_view(), name='signup'),
+    path('api/signin/', SignInView.as_view(), name='signin'),
 ]

@@ -101,20 +101,10 @@ class UsersSuggestion(BaseModel):
 
 class Account(BaseModel):
     """A class to store accounts"""
-    first_name = models.CharField(
+    username = models.CharField(
         max_length=255,
         blank=False,
         verbose_name='نام'
-    )
-    last_name = models.CharField(
-        max_length=255,
-        blank=False,
-        verbose_name='نام خانوادگی'
-    )
-    phone_number = models.CharField(
-        max_length=11,
-        blank=False,
-        verbose_name='شماره تماس'
     )
     password = models.CharField(
         max_length=20,

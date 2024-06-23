@@ -1,14 +1,27 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, filters
+from rest_framework import generics, permissions, viewsets, filters
+from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializer import (
     PatientSerializer, ReportSerializer, PatientsReportsSerializer, MedicineSerializer, ServiceSerializer,
     ReservationSerializer, AccountSerializer, AvailableTimesSerializer, UsersSuggestionSerializer,
-    DoctorSerializer, DoctorsServicesSerializer,
+    DoctorSerializer, DoctorsServicesSerializer, CustomTokenObtainPairSerializer
 )
+from django.contrib.auth.models import User
 from .models import (
     Patient, Report, PatientsReports, Medicine, Service, Reservation, Account, AvailableTimes, UsersSuggestion,
     Doctor, DoctorsServices,
 )
+
+
+class SignUpView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = AccountSerializer
+
+
+class SignInView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 
 class DoctorViewSet(viewsets.ReadOnlyModelViewSet):

@@ -29,21 +29,19 @@ class BaseAdmin(admin.ModelAdmin):
 class AdminAccount(BaseAdmin):
     list_display = (
         'id',
-        'first_name',
-        'last_name',
-        'phone_number',
+        'username',
         'password',
         'is_active',
         'created_date',
         'updated_date',
     )
-    list_display_links = ('id', 'first_name', 'last_name')
+    list_display_links = ('id', 'username',)
     list_filter = ('is_active', 'created_date', 'updated_date')
     list_editable = ('is_active',)
     # Order by national code
     ordering = ('pk',)
 
-    search_fields = ('id', 'first_name', 'last_name', 'phone_number')
+    search_fields = ('id', 'username')
 
 
 @admin.register(Service)

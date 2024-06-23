@@ -3,6 +3,8 @@ from .models import (
     Doctor, DoctorsServices,
 )
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth.models import User
 
 
 class DoctorSerializer(serializers.ModelSerializer):
@@ -31,16 +33,21 @@ class UsersSuggestionSerializer(serializers.ModelSerializer):
 
 
 class AccountSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Account
 
+        extra_kwargs = {'password': {'write_only': True}}
+
         fields = (
             'id',
-            'first_name',
-            'last_name',
-            'phone_number',
+            'username',
             'password'
         )
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
 
 
 class AvailableTimesSerializer(serializers.ModelSerializer):
@@ -135,16 +142,9 @@ class PatientsReportsSerializer(serializers.ModelSerializer):
         )
 
 
-# class UsersSuggestionSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = UsersSuggestion
-#
-#         address = AddressSerializer
-#
-#         fields = (
-#             'id',
-#             'first_name',
-#             'last_name',
-#             'number'
-#         )
-
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        return token
