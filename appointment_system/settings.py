@@ -31,6 +31,9 @@ INSTALLED_APPS = [
 
     # My Apps
     'patient.apps.PatientConfig',
+    # TrustedApps
+    'django_filters',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
