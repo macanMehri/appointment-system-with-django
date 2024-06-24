@@ -1,5 +1,5 @@
 from .models import (
-    Patient, Report, PatientsReports, Medicine, Service, Reservation, Account, AvailableTimes, UsersSuggestion,
+    Patient, Report, PatientsReports, Medicine, Service, Reservation, AvailableTimes, UsersSuggestion,
     Doctor, DoctorsServices,
 )
 from rest_framework import serializers
@@ -35,19 +35,32 @@ class UsersSuggestionSerializer(serializers.ModelSerializer):
 class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Account
+        model = User
 
         extra_kwargs = {'password': {'write_only': True}}
 
-        fields = (
-            'id',
-            'username',
-            'password'
-        )
+        fields = ('username', 'password')
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
+        user.save()
         return user
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Patient
+        fields = (
+            'username',
+            'national_code',
+            'first_name',
+            'last_name',
+            'phone_number',
+            'sex',
+            'birth_day',
+            'file_number',
+        )
 
 
 class AvailableTimesSerializer(serializers.ModelSerializer):
@@ -74,9 +87,7 @@ class ServiceSerializer(serializers.ModelSerializer):
 class DoctorsServicesSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorsServices
-
-        doctor = DoctorSerializer
-        service = ServiceSerializer
+        fields = '__all__'
 
 
 class ReservationSerializer(serializers.ModelSerializer):
@@ -112,7 +123,6 @@ class PatientSerializer(serializers.ModelSerializer):
             'phone_number',
             'sex',
             'birth_day',
-            'national_code',
             'file_number',
         )
 

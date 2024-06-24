@@ -3,6 +3,7 @@ from datetime import datetime
 from django.contrib.postgres.fields import ranges
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager, User
 
 
 GENDER_CHOICES = (
@@ -99,31 +100,6 @@ class UsersSuggestion(BaseModel):
         return f'{self.title}-{self.type}: {self.description}'
 
 
-class Account(BaseModel):
-    """A class to store accounts"""
-    username = models.CharField(
-        max_length=255,
-        blank=False,
-        verbose_name='نام'
-    )
-    password = models.CharField(
-        max_length=20,
-        blank=False,
-        verbose_name='رمز عبور'
-    )
-    
-    @property
-    def full_name(self):
-        return f'{self.first_name} {self.last_name}'
-
-    class Meta:
-        verbose_name = 'حساب کاربری'
-        verbose_name_plural = 'حساب های کاربری'
-
-    def __str__(self) -> str:
-        return f'{self.full_name}: {self.phone_number}'
-
-
 class AvailableTimes(BaseModel):
     """A class to show open times for reservation"""
     available_time = models.DateTimeField(
@@ -212,43 +188,49 @@ class Report(BaseModel):
 
 class Patient(BaseModel):
     """A class for patients"""
+
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE, verbose_name='کاربر')
+
     first_name = models.CharField(
         max_length=255,
-        blank=False,
-        verbose_name='نام'
+        blank=True,
+        null=True,
+        verbose_name='نام',
+        default=None,
     )
     last_name = models.CharField(
         max_length=255,
-        blank=False,
-        verbose_name='نام خانوادگی'
+        blank=True,
+        null=True,
+        verbose_name='نام خانوادگی',
+        default=None,
     )
     phone_number = models.CharField(
         max_length=11,
-        blank=False,
-        verbose_name='شماره تماس'
+        blank=True,
+        null=True,
+        verbose_name='شماره تماس',
+        default=None,
     )
     sex = models.CharField(
         max_length=9,
         choices=GENDER_CHOICES,
-        default='مرد',
-        verbose_name='جنسیت'
+        default=None,
+        verbose_name='جنسیت',
+        null=True,
     )
     birth_day = models.DateField(
-        verbose_name='تاریخ تولد'
-    )
-    national_code = models.CharField(
-        max_length=10,
-        primary_key=True,
-        verbose_name='کد ملی',
+        verbose_name='تاریخ تولد',
+        blank=True,
+        null=True,
+        default=None,
     )
     file_number = models.IntegerField(
-        unique=True,
         verbose_name='شماره پرونده',
+        blank=True,
+        null=True,
+        default=None,
     )
-
-    @property
-    def سن(self):
-        return datetime.now().year - self.birth_day.year
 
     reservation = models.ForeignKey(
         Reservation,
@@ -267,7 +249,6 @@ class Patient(BaseModel):
             f'{self.last_name} - ' +
             f'{self.sex} - ' +
             f'{self.birth_day} - ' +
-            f'{self.national_code} - ' +
             f'{self.file_number}'
         )
 

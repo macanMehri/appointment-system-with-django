@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (
-    Patient, Report, PatientsReports, Medicine, Service, Reservation, Account, AvailableTimes, UsersSuggestion,
+    Patient, Report, PatientsReports, Medicine, Service, Reservation, AvailableTimes, UsersSuggestion,
     Doctor, DoctorsServices,
 )
 
@@ -23,25 +23,6 @@ class BaseAdmin(admin.ModelAdmin):
         activate_selected_items,
         deactivate_selected_items,
     )
-
-
-@admin.register(Account)
-class AdminAccount(BaseAdmin):
-    list_display = (
-        'id',
-        'username',
-        'password',
-        'is_active',
-        'created_date',
-        'updated_date',
-    )
-    list_display_links = ('id', 'username',)
-    list_filter = ('is_active', 'created_date', 'updated_date')
-    list_editable = ('is_active',)
-    # Order by national code
-    ordering = ('pk',)
-
-    search_fields = ('id', 'username')
 
 
 @admin.register(Service)
@@ -100,7 +81,6 @@ class AdminDoctorsServices(BaseAdmin):
     search_fields = ('id', 'service__title', 'doctor__first_name', 'doctor__last_name', 'doctor__national_code')
 
 
-
 @admin.register(Reservation)
 class AdminReservation(BaseAdmin):
     list_display = (
@@ -123,12 +103,10 @@ class AdminReservation(BaseAdmin):
 @admin.register(Patient)
 class AdminPatient(BaseAdmin):
     list_display = (
-        'national_code',
         'first_name',
         'last_name',
         'phone_number',
         'birth_day',
-        'سن',
         'sex',
         'file_number',
         'reservation',
@@ -136,14 +114,13 @@ class AdminPatient(BaseAdmin):
         'created_date',
         'updated_date',
     )
-    list_display_links = ('national_code', 'first_name', 'file_number',)
+    list_display_links = ('first_name', 'file_number')
     list_filter = ('is_active', 'reservation__date', 'created_date', 'updated_date', 'sex', 'birth_day')
     list_editable = ('is_active', 'sex')
     # Order by national code
-    ordering = ('national_code',)
+    ordering = ('pk',)
 
     search_fields = (
-        'national_code',
         'first_name',
         'last_name',
         'file_number',
@@ -191,7 +168,6 @@ class AdminPatientsReports(BaseAdmin):
     ordering = ('pk',)
 
     search_fields = (
-        'patient__national_code',
         'patient__file_number',
         'patient__first_name',
         'patient__last_name',
