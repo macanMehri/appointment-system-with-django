@@ -50,17 +50,8 @@ class AccountSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Patient
-        fields = (
-            'username',
-            'national_code',
-            'first_name',
-            'last_name',
-            'phone_number',
-            'sex',
-            'birth_day',
-            'file_number',
-        )
+        model = User
+        fields = '__all__'
 
 
 class AvailableTimesSerializer(serializers.ModelSerializer):
