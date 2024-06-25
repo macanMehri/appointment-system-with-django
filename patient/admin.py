@@ -103,6 +103,7 @@ class AdminReservation(BaseAdmin):
 @admin.register(Patient)
 class AdminPatient(BaseAdmin):
     list_display = (
+        'user',
         'first_name',
         'last_name',
         'phone_number',
@@ -114,7 +115,7 @@ class AdminPatient(BaseAdmin):
         'created_date',
         'updated_date',
     )
-    list_display_links = ('first_name', 'file_number')
+    list_display_links = ('first_name', 'file_number', 'user')
     list_filter = ('is_active', 'reservation__date', 'created_date', 'updated_date', 'sex', 'birth_day')
     list_editable = ('is_active', 'sex')
     # Order by national code

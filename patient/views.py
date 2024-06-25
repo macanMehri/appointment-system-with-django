@@ -16,7 +16,7 @@ from .serializer import (
 from django.contrib.auth.models import User
 from .models import (
     Patient, Report, PatientsReports, Medicine, Service, Reservation, AvailableTimes, UsersSuggestion,
-    Doctor, DoctorsServices,
+    Doctor, DoctorsServices
 )
 
 

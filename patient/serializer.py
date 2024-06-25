@@ -1,6 +1,6 @@
 from .models import (
     Patient, Report, PatientsReports, Medicine, Service, Reservation, AvailableTimes, UsersSuggestion,
-    Doctor, DoctorsServices,
+    Doctor, DoctorsServices
 )
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -12,7 +12,6 @@ class DoctorSerializer(serializers.ModelSerializer):
         model = Doctor
 
         fields = (
-            'national_code',
             'first_name',
             'last_name',
             'password',
@@ -44,13 +43,15 @@ class AccountSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         user.save()
+        patient = Patient.objects.create(user=user)
+        patient.save()
         return user
 
 
 class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = User
+        model = Patient
         fields = '__all__'
 
 
@@ -78,7 +79,9 @@ class ServiceSerializer(serializers.ModelSerializer):
 class DoctorsServicesSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorsServices
-        fields = '__all__'
+        doctor = DoctorSerializer
+        service = ServiceSerializer
+        fields = ('doctor', 'service')
 
 
 class ReservationSerializer(serializers.ModelSerializer):
