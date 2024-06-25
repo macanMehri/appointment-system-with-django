@@ -77,18 +77,20 @@ class ServiceSerializer(serializers.ModelSerializer):
 
 
 class DoctorsServicesSerializer(serializers.ModelSerializer):
+    doctor = DoctorSerializer()
+    service = ServiceSerializer()
+
     class Meta:
         model = DoctorsServices
-        doctor = DoctorSerializer
-        service = ServiceSerializer
+
         fields = ('doctor', 'service')
 
 
 class ReservationSerializer(serializers.ModelSerializer):
+    doctor_and_service = DoctorsServicesSerializer()
+
     class Meta:
         model = Reservation
-
-        doctor_and_service = DoctorsServicesSerializer
 
         fields = (
             'id',
@@ -132,12 +134,13 @@ class MedicineSerializer(serializers.ModelSerializer):
 
 
 class PatientsReportsSerializer(serializers.ModelSerializer):
+
+    patient = PatientSerializer()
+    report = ReportSerializer()
+    medicine = MedicineSerializer()
+
     class Meta:
         model = PatientsReports
-
-        patient = PatientSerializer
-        report = ReportSerializer
-        medicine = MedicineSerializer
 
         fields = (
             'id',
